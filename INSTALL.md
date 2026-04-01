@@ -30,7 +30,7 @@ powershell -ExecutionPolicy Bypass -File setup.ps1
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=savmikem_bd
+DB_DATABASE=p
 DB_USERNAME=root
 DB_PASSWORD=
 ```

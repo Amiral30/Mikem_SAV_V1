@@ -11,7 +11,7 @@
     --text-secondary: #475569;
     --text-muted: #64748b;
     --accent-primary: #d32f2f;
-    --accent-gradient: linear-gradient(135deg, #d32f2f 0%, #1a237e 100%);
+    --accent-gradient: linear-gradient(135deg, #0400ff 0%, #061bff 100%);
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
@@ -159,7 +159,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 .btn-primary {
     background: var(--accent-gradient);
     color: white;
-    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(13, 0, 255, 0.3);
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4); color: white; }
 .btn-success { background: var(--success); color: white; }

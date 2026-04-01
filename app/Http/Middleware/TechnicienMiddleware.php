@@ -10,7 +10,7 @@ class TechnicienMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->isTechnicien()) {
+        if (!auth()->check() || !auth()->user()->isTechnicien()) { 
             abort(403, 'Accès non autorisé.');
         }
         return $next($request);

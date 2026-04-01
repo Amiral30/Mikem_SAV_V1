@@ -6,35 +6,30 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Administration') - SAV Mikem</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 </head>
 <body>
     <div class="app-layout">
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <h2>🔧 SAV Mikem</h2>
+                <img src="{{ asset('images/logo.png') }}" alt="Mikem Technologie" style="height: auto; width: 100%; max-width: 180px; object-fit: contain;">
                 <small>Panneau d'Administration</small>
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">Principal</div>
                     <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <span class="nav-icon">📊</span> Dashboard
+                        <span class="nav-icon"><i class="las la-chart-bar"></i></span> Dashboard
                     </a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Gestion</div>
                     <a href="{{ route('admin.missions.index') }}" class="nav-link {{ request()->routeIs('admin.missions.*') ? 'active' : '' }}">
-                        <span class="nav-icon">📋</span> Missions
-                    </a>
-                    <a href="{{ route('admin.missions.create') }}" class="nav-link">
-                        <span class="nav-icon">➕</span> Nouvelle Mission
+                        <span class="nav-icon"><i class="las la-clipboard-list"></i></span> Missions
                     </a>
                     <a href="{{ route('admin.techniciens.index') }}" class="nav-link {{ request()->routeIs('admin.techniciens.*') ? 'active' : '' }}">
-                        <span class="nav-icon">👨‍🔧</span> Techniciens
-                    </a>
-                    <a href="{{ route('admin.techniciens.create') }}" class="nav-link">
-                        <span class="nav-icon">👤</span> Ajouter Technicien
+                        <span class="nav-icon"><i class="las la-tools"></i></span> Techniciens
                     </a>
                 </div>
             </nav>
@@ -68,7 +63,7 @@
             </div>
         </main>
     </div>
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="las la-bars"></i></button>
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');

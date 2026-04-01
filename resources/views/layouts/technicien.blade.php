@@ -6,29 +6,30 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Espace Technicien') - SAV Mikem</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 </head>
 <body>
     <div class="app-layout">
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <h2>🔧 SAV Mikem</h2>
+                <img src="{{ asset('images/logo.png') }}" alt="Mikem Technologie" style="height: auto; width: 100%; max-width: 180px; object-fit: contain;">
                 <small>Espace Technicien</small>
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">Principal</div>
                     <a href="{{ route('technicien.dashboard') }}" class="nav-link {{ request()->routeIs('technicien.dashboard') ? 'active' : '' }}">
-                        <span class="nav-icon">📊</span> Dashboard
+                        <span class="nav-icon"><i class="las la-chart-bar"></i></span> Dashboard
                     </a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Missions</div>
                     <a href="{{ route('technicien.missions.index') }}" class="nav-link {{ request()->routeIs('technicien.missions.*') ? 'active' : '' }}">
-                        <span class="nav-icon">📋</span> Mes Missions
+                        <span class="nav-icon"><i class="las la-clipboard-list"></i></span> Mes Missions
                     </a>
                     <a href="{{ route('technicien.historique') }}" class="nav-link {{ request()->routeIs('technicien.historique') ? 'active' : '' }}">
-                        <span class="nav-icon">📚</span> Historique
+                        <span class="nav-icon"><i class="las la-history"></i></span> Historique
                     </a>
                 </div>
             </nav>
@@ -62,7 +63,7 @@
             </div>
         </main>
     </div>
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="las la-bars"></i></button>
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');

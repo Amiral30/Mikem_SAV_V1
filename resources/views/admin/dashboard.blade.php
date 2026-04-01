@@ -5,20 +5,20 @@
 
 @section('content')
 <div class="stats-grid">
-    <div class="stat-card"><div class="stat-icon purple">📋</div><div class="stat-value">{{ $stats['total_missions'] }}</div><div class="stat-label">Total Missions</div></div>
-    <div class="stat-card"><div class="stat-icon blue">🔄</div><div class="stat-value">{{ $stats['missions_en_cours'] }}</div><div class="stat-label">En Cours</div></div>
-    <div class="stat-card"><div class="stat-icon yellow">⏳</div><div class="stat-value">{{ $stats['missions_en_attente'] }}</div><div class="stat-label">En Attente</div></div>
-    <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-value">{{ $stats['missions_terminees'] }}</div><div class="stat-label">Terminées</div></div>
-    <div class="stat-card"><div class="stat-icon orange">⏸️</div><div class="stat-value">{{ $stats['missions_en_pause'] }}</div><div class="stat-label">En Pause</div></div>
-    <div class="stat-card"><div class="stat-icon red">⛔</div><div class="stat-value">{{ $stats['missions_suspendues'] }}</div><div class="stat-label">Suspendues</div></div>
-    <div class="stat-card"><div class="stat-icon green">👨‍🔧</div><div class="stat-value">{{ $stats['techniciens_disponibles'] }}<span style="font-size:0.9rem;color:var(--text-muted)">/{{ $stats['total_techniciens'] }}</span></div><div class="stat-label">Techniciens Disponibles</div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="las la-clipboard-list"></i></div><div class="stat-value">{{ $stats['total_missions'] }}</div><div class="stat-label">Total Missions</div></div>
+    <div class="stat-card"><div class="stat-icon blue"><i class="las la-sync"></i></div><div class="stat-value">{{ $stats['missions_en_cours'] }}</div><div class="stat-label">En Cours</div></div>
+    <div class="stat-card"><div class="stat-icon yellow"><i class="las la-hourglass-half"></i></div><div class="stat-value">{{ $stats['missions_en_attente'] }}</div><div class="stat-label">En Attente</div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="las la-check-circle"></i></div><div class="stat-value">{{ $stats['missions_terminees'] }}</div><div class="stat-label">Terminées</div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="las la-pause-circle"></i></div><div class="stat-value">{{ $stats['missions_en_pause'] }}</div><div class="stat-label">En Pause</div></div>
+    <div class="stat-card"><div class="stat-icon red"><i class="las la-ban"></i></div><div class="stat-value">{{ $stats['missions_suspendues'] }}</div><div class="stat-label">Suspendues</div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="las la-user-check"></i></div><div class="stat-value">{{ $stats['techniciens_disponibles'] }}<span style="font-size:0.9rem;color:var(--text-muted)">/{{ $stats['total_techniciens'] }}</span></div><div class="stat-label">Techniciens Disponibles</div></div>
 </div>
 
 <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 24px;">
     <div class="card">
         <div class="card-header">
-            <h3>📋 Missions Récentes</h3>
-            <a href="{{ route('admin.missions.create') }}" class="btn btn-primary btn-sm">+ Nouvelle</a>
+            <h3><i class="las la-list"></i> Missions Récentes</h3>
+            <a href="{{ route('admin.missions.create') }}" class="btn btn-primary btn-sm"><i class="las la-plus"></i> Nouvelle</a>
         </div>
         <div class="table-responsive">
             <table class="table">
@@ -31,7 +31,7 @@
                         <td>{{ $mission->date_mission->format('d/m/Y') }}</td>
                         <td><span class="badge {{ $mission->statut_class }}">{{ $mission->statut_label }}</span></td>
                         <td>
-                            @if($mission->chefEquipe)<span style="font-size:0.8rem">👑 {{ $mission->chefEquipe->name }}</span>@endif
+                            @if($mission->chefEquipe)<span style="font-size:0.8rem"><i class="las la-crown text-warning"></i> {{ $mission->chefEquipe->name }}</span>@endif
                             @if($mission->techniciens->count() > 1)<span class="text-muted" style="font-size:0.75rem">+{{ $mission->techniciens->count() - 1 }}</span>@endif
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
     </div>
     <div class="card">
         <div class="card-header">
-            <h3>👨‍🔧 Techniciens</h3>
+            <h3><i class="las la-users"></i> Techniciens</h3>
             <a href="{{ route('admin.techniciens.index') }}" class="btn btn-secondary btn-sm">Voir tout</a>
         </div>
         <div class="card-body" style="padding:12px;">

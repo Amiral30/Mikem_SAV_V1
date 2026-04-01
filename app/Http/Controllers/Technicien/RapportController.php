@@ -12,8 +12,12 @@ class RapportController extends Controller
     public function create(Mission $mission)
     {
         $user = auth()->user();
-        if (!$mission->techniciens->contains($user->id)) {
-            abort(403);
+        $pivot = $mission->techniciens()->where('user_id', $user->id)->first();
+        if (!$pivot) {
+            return back()->with('error', 'Accès non autorisé.');
+        }
+        if ($mission->is_groupe && !$pivot->pivot->is_chef_equipe) {
+            return back()->with('error', 'Seul le chef d\'équipe est habilité à rédiger le rapport final.');
         }
         $existingRapport = Rapport::where('mission_id', $mission->id)->where('user_id', $user->id)->first();
         if ($existingRapport) {
@@ -26,8 +30,12 @@ class RapportController extends Controller
     public function store(RapportRequest $request, Mission $mission)
     {
         $user = auth()->user();
-        if (!$mission->techniciens->contains($user->id)) {
+        $pivot = $mission->techniciens()->where('user_id', $user->id)->first();
+        if (!$pivot) {
             abort(403);
+        }
+        if ($mission->is_groupe && !$pivot->pivot->is_chef_equipe) {
+            abort(403, 'Seul le chef d\'équipe peut soumettre le rapport.');
         }
         $fichiers = [];
         if ($request->hasFile('fichiers')) {

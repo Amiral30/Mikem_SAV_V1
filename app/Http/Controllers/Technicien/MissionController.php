@@ -47,8 +47,12 @@ class MissionController extends Controller
     public function updateStatut(Request $request, Mission $mission)
     {
         $user = auth()->user();
-        if (!$mission->techniciens->contains($user->id)) {
-            abort(403, 'Vous n\'êtes pas assigné à cette mission.');
+        $pivot = $mission->techniciens()->where('user_id', $user->id)->first();
+        if (!$pivot) {
+            return back()->with('error', 'Vous n\'êtes pas assigné à cette mission.');
+        }
+        if ($mission->is_groupe && !$pivot->pivot->is_chef_equipe) {
+            return back()->with('error', 'Vous ne pouvez pas modifier le statut car vous n\'êtes pas chef d\'équipe !');
         }
         $request->validate(['statut' => 'required|in:en_cours,en_pause,terminee']);
         $mission->update(['statut' => $request->statut]);

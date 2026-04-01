@@ -10,7 +10,7 @@
     <div class="login-page">
         <div class="login-card">
             <div class="login-logo">
-                <h1>🔧 SAV Mikem</h1>
+                <img src="{{ asset('images/logo.png') }}" alt="Mikem Technologie" style="height: auto; width: 100%; max-width: 220px; margin-bottom: 20px;">
                 <p>Gestion des missions d'intervention</p>
             </div>
             @if($errors->any())

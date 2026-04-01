@@ -31,5 +31,27 @@ class AdminSeeder extends Seeder
                 'disponible' => true,
             ]
         );
+
+        User::firstOrCreate(
+            ['email' => 'tech1@savmikem.com'],
+            [
+                'name' => 'Technicien Alpha',
+                'password' => Hash::make('tech123'),
+                'role' => 'technicien',
+                'telephone' => '0622222222',
+                'disponible' => true,
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'tech2@savmikem.com'],
+            [
+                'name' => 'Technicien Beta',
+                'password' => Hash::make('tech123'),
+                'role' => 'technicien',
+                'telephone' => '0633333333',
+                'disponible' => true,
+            ]
+        );
     }
 }

@@ -4,10 +4,6 @@ Application web Laravel + MySQL pour la gestion et le suivi des missions d'inter
 
 ## User Review Required
 
-> [!IMPORTANT]
-> **Exécution de commandes impossible** : Le système de sandbox ne supporte pas Windows pour l'exécution directe de commandes. Je vais créer **tous les fichiers du projet** manuellement. Vous devrez ensuite exécuter les commandes d'installation vous-même (instructions fournies).
-
-> [!WARNING]
 > **Prérequis à vérifier sur votre machine** :
 > - PHP >= 8.2 avec extensions (mbstring, xml, pdo_mysql, zip, curl)
 > - Composer

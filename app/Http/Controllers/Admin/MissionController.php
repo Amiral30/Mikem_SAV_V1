@@ -58,6 +58,9 @@ class MissionController extends Controller
 
     public function edit(Mission $mission)
     {
+        if ($mission->statut !== 'en_attente') {
+            return redirect()->route('admin.missions.show', $mission)->with('error', 'La mission a déjà débuté et n\'est plus modifiable.');
+        }
         $techniciens = User::techniciens()->get();
         $mission->load('techniciens');
         return view('admin.missions.edit', compact('mission', 'techniciens'));
@@ -65,6 +68,9 @@ class MissionController extends Controller
 
     public function update(MissionRequest $request, Mission $mission)
     {
+        if ($mission->statut !== 'en_attente') {
+            return back()->with('error', 'La mission a déjà débuté, modification impossible.');
+        }
         $data = $request->validated();
         $data['is_groupe'] = count($request->input('techniciens', [])) > 1;
         $previousTechIds = $mission->techniciens->pluck('id')->toArray();
@@ -77,6 +83,9 @@ class MissionController extends Controller
 
     public function destroy(Mission $mission)
     {
+        if ($mission->statut !== 'en_attente') {
+            return back()->with('error', 'La mission a déjà débuté, suppression impossible.');
+        }
         $techIds = $mission->techniciens->pluck('id')->toArray();
         User::whereIn('id', $techIds)->update(['disponible' => true]);
         $mission->delete();
@@ -87,6 +96,9 @@ class MissionController extends Controller
 
     public function updateStatut(Request $request, Mission $mission)
     {
+        if ($mission->statut === 'terminee') {
+            return back()->with('error', 'Impossible de modifier le statut : la mission est déjà terminée par le technicien.');
+        }
         $request->validate([
             'statut' => 'required|in:en_attente,en_cours,en_pause,suspendue,terminee',
         ]);
@@ -129,6 +141,7 @@ class MissionController extends Controller
             if (!empty($newTechIds)) {
                 $newTechs = User::whereIn('id', $newTechIds)->get();
                 foreach ($newTechs as $technicien) {
+                    /** @var \App\Models\User $technicien */
                     try {
                         Mail::to($technicien->email)->send(new MissionAssignee($mission, $technicien));
                     } catch (\Exception $e) {

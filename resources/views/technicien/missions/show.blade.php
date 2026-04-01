@@ -39,7 +39,7 @@
                     <div class="detail-section"><h4>Type</h4><div class="detail-value">{{ $mission->type_mission }}</div></div>
                     <div class="detail-section"><h4>Date</h4><div class="detail-value">{{ $mission->date_mission->format('d/m/Y') }}</div></div>
                     <div class="detail-section"><h4>Adresse</h4><div class="detail-value"><i class="las la-map-marker"></i> {{ $mission->adresse }}</div></div>
-                    @if($mission->prix_deplacement)<div class="detail-section"><h4>Prix déplacement</h4><div class="detail-value">{{ number_format($mission->prix_deplacement, 2, ',', ' ') }} €</div></div>@endif
+                    @if($mission->prix_deplacement)<div class="detail-section"><h4>Prix déplacement</h4><div class="detail-value">{{ number_format($mission->prix_deplacement, 0, ',', ' ') }} Fcfa</div></div>@endif
                 </div>
                 <div class="detail-section"><h4>Description</h4><div class="detail-value">{{ $mission->description }}</div></div>
             </div>

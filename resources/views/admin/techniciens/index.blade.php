@@ -26,7 +26,7 @@
                     <td>{{ $tech->email }}</td>
                     <td>{{ $tech->telephone ?? '-' }}</td>
                     <td>{{ $tech->missions_count }}</td>
-                    <td><span class="badge {{ $tech->disponible?'badge-disponible':'badge-occupe' }}">{{ $tech->disponible?'Disponible':'Occupé' }}</span></td>
+                    <td><span class="badge {{ $tech->disponible?'badge-disponible':'badge-occupe' }}">{{ $tech->disponible?'Disponible':'En mission' }}</span></td>
                     <td><div class="btn-group"><a href="{{ route('admin.techniciens.show', $tech) }}" class="btn btn-secondary btn-sm"><i class="las la-eye"></i></a><a href="{{ route('admin.techniciens.edit', $tech) }}" class="btn btn-secondary btn-sm"><i class="las la-pen"></i></a><form action="{{ route('admin.techniciens.destroy', $tech) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">@csrf @method('DELETE')<button class="btn btn-danger btn-sm"><i class="las la-trash"></i></button></form></div></td>
                 </tr>
                 @empty

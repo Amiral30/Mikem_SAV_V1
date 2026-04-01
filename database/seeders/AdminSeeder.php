@@ -11,7 +11,7 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['email' => 'admin@savmikem.com'],
+            ['email' => 'vianneysasse2005@gmail.com'],
             [
                 'name' => 'Administrateur',
                 'password' => Hash::make('admin123'),
@@ -22,9 +22,9 @@ class AdminSeeder extends Seeder
         );
 
         User::firstOrCreate(
-            ['email' => 'technicien@savmikem.com'],
+            ['email' => 'yannnomnia01@gmail.com'],
             [
-                'name' => 'Technicien Test',
+                'name' => 'yann',
                 'password' => Hash::make('tech123'),
                 'role' => 'technicien',
                 'telephone' => '0611111111',
@@ -33,23 +33,12 @@ class AdminSeeder extends Seeder
         );
 
         User::firstOrCreate(
-            ['email' => 'tech1@savmikem.com'],
+            ['email' => 'almirantevianney2005@gmail.com'],
             [
-                'name' => 'Technicien Alpha',
+                'name' => 'amiral',
                 'password' => Hash::make('tech123'),
                 'role' => 'technicien',
                 'telephone' => '0622222222',
-                'disponible' => true,
-            ]
-        );
-
-        User::firstOrCreate(
-            ['email' => 'tech2@savmikem.com'],
-            [
-                'name' => 'Technicien Beta',
-                'password' => Hash::make('tech123'),
-                'role' => 'technicien',
-                'telephone' => '0633333333',
                 'disponible' => true,
             ]
         );

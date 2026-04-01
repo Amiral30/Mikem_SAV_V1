@@ -86,8 +86,6 @@ class MissionController extends Controller
         if ($mission->statut !== 'en_attente') {
             return back()->with('error', 'La mission a déjà débuté, suppression impossible.');
         }
-        $techIds = $mission->techniciens->pluck('id')->toArray();
-        User::whereIn('id', $techIds)->update(['disponible' => true]);
         $mission->delete();
 
         return redirect()->route('admin.missions.index')
@@ -104,9 +102,12 @@ class MissionController extends Controller
         ]);
         $mission->update(['statut' => $request->statut]);
 
-        if ($request->statut === 'terminee') {
-            $techIds = $mission->techniciens->pluck('id')->toArray();
+        if (in_array($request->statut, ['terminee', 'suspendue'])) {
+            $techIds = $mission->techniciens()->pluck('users.id')->toArray();
             User::whereIn('id', $techIds)->update(['disponible' => true]);
+        } elseif (in_array($request->statut, ['en_cours', 'en_pause'])) {
+            $techIds = $mission->techniciens()->pluck('users.id')->toArray();
+            User::whereIn('id', $techIds)->update(['disponible' => false]);
         }
         return back()->with('success', 'Statut mis à jour.');
     }
@@ -118,7 +119,6 @@ class MissionController extends Controller
 
         if (!empty($previousTechIds)) {
             $releasedIds = array_diff($previousTechIds, $technicienIds);
-            User::whereIn('id', $releasedIds)->update(['disponible' => true]);
         }
 
         if (!empty($technicienIds)) {
@@ -135,7 +135,6 @@ class MissionController extends Controller
             if ($chefEquipeId) {
                 $mission->update(['chef_equipe_id' => $chefEquipeId]);
             }
-            User::whereIn('id', $technicienIds)->update(['disponible' => false]);
 
             $newTechIds = array_diff($technicienIds, $previousTechIds);
             if (!empty($newTechIds)) {

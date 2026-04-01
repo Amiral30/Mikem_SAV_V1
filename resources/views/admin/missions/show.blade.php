@@ -22,7 +22,7 @@
                     <div class="detail-section"><h4>Type</h4><div class="detail-value">{{ $mission->type_mission }}</div></div>
                     <div class="detail-section"><h4>Date</h4><div class="detail-value">{{ $mission->date_mission->format('d/m/Y') }}</div></div>
                     <div class="detail-section"><h4>Adresse</h4><div class="detail-value">{{ $mission->adresse }}</div></div>
-                    <div class="detail-section"><h4>Prix déplacement</h4><div class="detail-value">{{ $mission->prix_deplacement ? number_format($mission->prix_deplacement, 2, ',', ' ').' €' : 'Non défini' }}</div></div>
+                    <div class="detail-section"><h4>Prix déplacement</h4><div class="detail-value">{{ $mission->prix_deplacement ? number_format($mission->prix_deplacement, 0, ',', ' ').' Fcfa' : 'Non défini' }}</div></div>
                 </div>
                 <div class="detail-section"><h4>Description</h4><div class="detail-value">{{ $mission->description }}</div></div>
                 <div class="detail-section"><h4>Créée par</h4><div class="detail-value">{{ $mission->createur->name ?? 'N/A' }} · {{ $mission->created_at->format('d/m/Y H:i') }}</div></div>

@@ -24,7 +24,7 @@
                 </div>
                 <div class="form-group"><label for="adresse">Adresse *</label><input type="text" id="adresse" name="adresse" class="form-control" value="{{ old('adresse', $mission->adresse) }}" required></div>
                 <div class="form-group"><label for="description">Description *</label><textarea id="description" name="description" class="form-control" rows="4" required>{{ old('description', $mission->description) }}</textarea></div>
-                <div class="form-group"><label for="prix_deplacement">Prix déplacement (€)</label><input type="number" id="prix_deplacement" name="prix_deplacement" class="form-control" step="0.01" min="0" value="{{ old('prix_deplacement', $mission->prix_deplacement) }}"></div>
+                <div class="form-group"><label for="prix_deplacement">Prix déplacement (Fcfa)</label><input type="number" id="prix_deplacement" name="prix_deplacement" class="form-control" step="50" min="0" value="{{ old('prix_deplacement', $mission->prix_deplacement) }}"></div>
 
                 <hr style="border-color:var(--border-color);margin:30px 0;">
                 <h3 style="margin-bottom:20px;">👨‍🔧 Assignation</h3>

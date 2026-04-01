@@ -21,6 +21,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('missions', AdminMissionController::class);
     Route::patch('/missions/{mission}/statut', [AdminMissionController::class, 'updateStatut'])->name('missions.statut');
+    Route::get('/techniciens/{technicien}/export-pdf', [TechnicienController::class, 'exportPdf'])->name('techniciens.export');
     Route::resource('techniciens', TechnicienController::class);
 });
 

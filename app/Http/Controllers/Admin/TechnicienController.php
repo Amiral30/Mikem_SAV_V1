@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TechnicienController extends Controller
 {
@@ -95,5 +96,14 @@ class TechnicienController extends Controller
         $technicien->delete();
         return redirect()->route('admin.techniciens.index')
             ->with('success', 'Technicien supprimé.');
+    }
+
+    public function exportPdf(User $technicien)
+    {
+        $technicien->load('missions');
+        $totalDeplacement = $technicien->missions->sum('prix_deplacement');
+
+        $pdf = Pdf::loadView('admin.techniciens.pdf', compact('technicien', 'totalDeplacement'));
+        return $pdf->download('rapport_technicien_' . $technicien->id . '.pdf');
     }
 }

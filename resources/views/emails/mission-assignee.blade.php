@@ -26,7 +26,7 @@
             <p><span class="label">Adresse :</span> {{ $mission->adresse }}</p>
             <p><span class="label">Description :</span> {{ Str::limit($mission->description, 200) }}</p>
             @if($mission->prix_deplacement)
-            <p><span class="label">Prix déplacement :</span> {{ number_format($mission->prix_deplacement, 2, ',', ' ') }} €</p>
+            <p><span class="label">Prix déplacement :</span> {{ number_format($mission->prix_deplacement, 0, ',', ' ') }} Fcfa</p>
             @endif
         </div>
         <p>Connectez-vous à l'application pour gérer cette mission.</p>

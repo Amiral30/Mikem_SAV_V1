@@ -37,11 +37,19 @@ class MissionController extends Controller
         if (!$pivot || !$pivot->pivot->is_chef_equipe) {
             abort(403, 'Seul le chef d\'équipe peut accepter la mission.');
         }
+
+        $hasActive = $user->missions()->whereIn('statut', ['en_cours', 'en_pause'])->exists();
+        if ($hasActive) {
+            return back()->with('error', 'Vous avez déjà une mission en cours. Terminez-la avant de démarrer une nouvelle mission.');
+        }
+
         $mission->techniciens()->updateExistingPivot($user->id, ['accepted' => true]);
         if ($mission->statut === 'en_attente') {
             $mission->update(['statut' => 'en_cours']);
+            $techIds = $mission->techniciens->pluck('id')->toArray();
+            User::whereIn('id', $techIds)->update(['disponible' => false]);
         }
-        return back()->with('success', 'Mission acceptée.');
+        return back()->with('success', 'Mission acceptée avec succès.');
     }
 
     public function updateStatut(Request $request, Mission $mission)
@@ -55,11 +63,22 @@ class MissionController extends Controller
             return back()->with('error', 'Vous ne pouvez pas modifier le statut car vous n\'êtes pas chef d\'équipe !');
         }
         $request->validate(['statut' => 'required|in:en_cours,en_pause,terminee']);
+
+        if (in_array($request->statut, ['en_cours', 'en_pause'])) {
+            $hasActive = $user->missions()->whereIn('statut', ['en_cours', 'en_pause'])->where('missions.id', '!=', $mission->id)->exists();
+            if ($hasActive) {
+                return back()->with('error', 'Vous avez déjà une autre mission en cours. Terminez-la avant de démarrer celle-ci.');
+            }
+        }
+
         $mission->update(['statut' => $request->statut]);
 
-        if ($request->statut === 'terminee') {
+        if (in_array($request->statut, ['terminee', 'suspendue'])) {
             $techIds = $mission->techniciens->pluck('id')->toArray();
             User::whereIn('id', $techIds)->update(['disponible' => true]);
+        } elseif (in_array($request->statut, ['en_cours', 'en_pause'])) {
+            $techIds = $mission->techniciens->pluck('id')->toArray();
+            User::whereIn('id', $techIds)->update(['disponible' => false]);
         }
         return back()->with('success', 'Statut mis à jour.');
     }

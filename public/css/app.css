@@ -74,7 +74,8 @@ a:hover { color: #e94560; }
 }
 .login-card {
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(0px);
+    opacity: 0.5;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
     padding: 50px 40px;
@@ -109,6 +110,7 @@ a:hover { color: #e94560; }
     font-weight: 500;
     color: var(--text-secondary);
     margin-bottom: 8px;
+    
 }
 .form-control {
     width: 100%;

@@ -25,7 +25,6 @@ class Mission extends Model
         'en_attente' => 'En attente',
         'en_cours' => 'En cours',
         'en_pause' => 'En pause',
-        'suspendue' => 'Suspendue',
         'terminee' => 'Terminée',
     ];
 
@@ -33,7 +32,6 @@ class Mission extends Model
         'en_attente' => '#ffc107',
         'en_cours' => '#2196f3',
         'en_pause' => '#ff9800',
-        'suspendue' => '#f44336',
         'terminee' => '#4caf50',
     ];
 
@@ -41,7 +39,6 @@ class Mission extends Model
         'en_attente' => 'badge-warning',
         'en_cours' => 'badge-info',
         'en_pause' => 'badge-pause',
-        'suspendue' => 'badge-danger',
         'terminee' => 'badge-success',
     ];
 

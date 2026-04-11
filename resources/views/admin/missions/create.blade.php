@@ -5,7 +5,7 @@
 @section('content')
 <div style="max-width:800px;">
     <div class="card">
-        <div class="card-header"><h3>📋 Détails de la mission</h3></div>
+        <div class="card-header"><h3><i class="las la-clipboard-list"></i> Détails de la mission</h3></div>
         <div class="card-body">
             @if($errors->any())<div class="alert alert-danger"><ul style="margin:0;padding-left:20px;">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
             <form action="{{ route('admin.missions.store') }}" method="POST">
@@ -27,7 +27,7 @@
                 <div class="form-group"><label for="prix_deplacement">Prix déplacement (Fcfa)</label><input type="number" id="prix_deplacement" name="prix_deplacement" class="form-control" step="50" min="0" value="{{ old('prix_deplacement') }}" placeholder="Fcfa"></div>
 
                 <hr style="border-color:var(--border-color);margin:30px 0;">
-                <h3 style="margin-bottom:20px;">👨‍🔧 Assignation</h3>
+                <h3 style="margin-bottom:20px;"><i class="las la-user-cog"></i> Assignation</h3>
                 <div class="form-group">
                     <label>Techniciens *</label>
                     <div style="max-height:250px;overflow-y:auto;background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:12px;">
@@ -70,5 +70,12 @@ function updateChefOptions() {
     } else { chefGroup.style.display = 'none'; }
 }
 document.addEventListener('DOMContentLoaded', updateChefOptions);
+
+document.querySelector('form').addEventListener('submit', function(e) {
+    const btn = this.querySelector('button[type="submit"]');
+    if (btn.disabled) return e.preventDefault();
+    btn.disabled = true;
+    btn.innerHTML = '<i class="las la-spinner la-spin"></i> Création en cours...';
+});
 </script>
 @endsection

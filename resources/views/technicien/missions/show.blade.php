@@ -19,13 +19,20 @@
             <div class="card-header"><h3><i class="las la-bolt"></i> Actions</h3></div>
             <div class="card-body">
                 <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                    @if($isChef && !$hasAccepted && $mission->statut === 'en_attente')
-                    <form action="{{ route('technicien.missions.accept', $mission) }}" method="POST">@csrf @method('PATCH')<button class="btn btn-success"><i class="las la-check"></i> Accepter la mission</button></form>
-                    @endif
-                    @if($mission->statut !== 'en_attente' || ($isChef && $hasAccepted) || $isSolo)
-                        @if($mission->statut !== 'en_cours')<form action="{{ route('technicien.missions.statut', $mission) }}" method="POST">@csrf @method('PATCH')<button type="submit" name="statut" value="en_cours" class="btn btn-info btn-sm"><i class="las la-play"></i> En cours</button></form>@endif
-                        @if($mission->statut !== 'en_pause')<form action="{{ route('technicien.missions.statut', $mission) }}" method="POST">@csrf @method('PATCH')<button type="submit" name="statut" value="en_pause" class="btn btn-warning btn-sm"><i class="las la-pause"></i> Pause</button></form>@endif
-                        <form action="{{ route('technicien.missions.statut', $mission) }}" method="POST">@csrf @method('PATCH')<button type="submit" name="statut" value="terminee" class="btn btn-success btn-sm" onclick="return confirm('Terminer ?')"><i class="las la-check-double"></i> Terminée</button></form>
+                    @if($mission->statut === 'en_attente')
+                        @if($isChef && !$hasAccepted)
+                        <form action="{{ route('technicien.missions.accept', $mission) }}" method="POST">@csrf @method('PATCH')<button class="btn btn-success"><i class="las la-check"></i> Accepter la mission</button></form>
+                        @elseif(!$isChef)
+                        <p class="text-muted"><i class="las la-hourglass"></i> En attente d'acceptation par le chef d'équipe.</p>
+                        @endif
+                    @else
+                        @if($isChef || $isSolo)
+                            @if($mission->statut !== 'en_cours')<form action="{{ route('technicien.missions.statut', $mission) }}" method="POST">@csrf @method('PATCH')<button type="submit" name="statut" value="en_cours" class="btn btn-info btn-sm"><i class="las la-play"></i> Commencer / Reprendre</button></form>@endif
+                            @if($mission->statut !== 'en_pause')<form action="{{ route('technicien.missions.statut', $mission) }}" method="POST">@csrf @method('PATCH')<button type="submit" name="statut" value="en_pause" class="btn btn-warning btn-sm"><i class="las la-pause"></i> Suspendre (Pause)</button></form>@endif
+                            <form action="{{ route('technicien.missions.statut', $mission) }}" method="POST">@csrf @method('PATCH')<button type="submit" name="statut" value="terminee" class="btn btn-success btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir terminer cette mission ? Vous devrez rédiger un rapport par la suite.')"><i class="las la-check-double"></i> Terminée</button></form>
+                        @else
+                            <p class="text-muted"><i class="las la-eye"></i> Vous êtes membre de cette équipe. Seul le chef d'équipe contrôle l'avancement de la mission.</p>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -39,7 +46,6 @@
                     <div class="detail-section"><h4>Type</h4><div class="detail-value">{{ $mission->type_mission }}</div></div>
                     <div class="detail-section"><h4>Date</h4><div class="detail-value">{{ $mission->date_mission->format('d/m/Y') }}</div></div>
                     <div class="detail-section"><h4>Adresse</h4><div class="detail-value"><i class="las la-map-marker"></i> {{ $mission->adresse }}</div></div>
-                    @if($mission->prix_deplacement)<div class="detail-section"><h4>Prix déplacement</h4><div class="detail-value">{{ number_format($mission->prix_deplacement, 0, ',', ' ') }} Fcfa</div></div>@endif
                 </div>
                 <div class="detail-section"><h4>Description</h4><div class="detail-value">{{ $mission->description }}</div></div>
             </div>
@@ -54,7 +60,28 @@
                     <div class="detail-section"><h4>Déroulement</h4><div class="detail-value">{{ $rapport->deroulement }}</div></div>
                     @if($rapport->difficultes)<div class="detail-section"><h4>Difficultés</h4><div class="detail-value">{{ $rapport->difficultes }}</div></div>@endif
                     <div class="detail-section"><h4>Actions réalisées</h4><div class="detail-value">{{ $rapport->actions_realisees }}</div></div>
-                    @if($rapport->fichiers)<div class="file-list">@foreach($rapport->fichiers as $f)<div class="file-item"><span><i class="las la-paperclip"></i></span><a href="{{ asset('storage/'.$f['path']) }}" target="_blank">{{ $f['name'] }}</a></div>@endforeach</div>@endif
+                    @if($rapport->fichiers)
+                    <div class="file-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                        @foreach($rapport->fichiers as $f)
+                        <div class="file-item" style="display: flex; align-items: center; padding: 10px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border-color);">
+                            <span style="margin-right: 10px; color: var(--accent-primary); font-size: 1.2rem;">
+                                @if(str_contains($f['type'] ?? '', 'image')) <i class="las la-image"></i>
+                                @elseif(str_contains($f['type'] ?? '', 'pdf')) <i class="las la-file-pdf"></i>
+                                @else <i class="las la-file"></i>
+                                @endif
+                            </span>
+                            <div style="flex: 1; overflow: hidden;">
+                                <a href="{{ url('storage/'.$f['path']) }}" target="_blank" style="font-weight: 500; font-size: 0.85rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $f['name'] }}">
+                                    {{ $f['name'] }}
+                                </a>
+                                @if(isset($f['original_name']) && $f['name'] !== $f['original_name'])
+                                <small class="text-muted" style="font-size: 0.7rem; display: block;">{{ $f['original_name'] }}</small>
+                                @endif
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
                 </div>
             </div>
             @else

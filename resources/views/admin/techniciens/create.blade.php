@@ -21,3 +21,14 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const btn = this.querySelector('button[type="submit"]');
+    if (btn.disabled) return e.preventDefault();
+    btn.disabled = true;
+    btn.innerHTML = '<i class="las la-spinner la-spin"></i> Création...';
+});
+</script>
+@endsection

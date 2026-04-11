@@ -92,26 +92,6 @@ class MissionController extends Controller
             ->with('success', 'Mission supprimée avec succès.');
     }
 
-    public function updateStatut(Request $request, Mission $mission)
-    {
-        if ($mission->statut === 'terminee') {
-            return back()->with('error', 'Impossible de modifier le statut : la mission est déjà terminée par le technicien.');
-        }
-        $request->validate([
-            'statut' => 'required|in:en_attente,en_cours,en_pause,suspendue,terminee',
-        ]);
-        $mission->update(['statut' => $request->statut]);
-
-        if (in_array($request->statut, ['terminee', 'suspendue'])) {
-            $techIds = $mission->techniciens()->pluck('users.id')->toArray();
-            User::whereIn('id', $techIds)->update(['disponible' => true]);
-        } elseif (in_array($request->statut, ['en_cours', 'en_pause'])) {
-            $techIds = $mission->techniciens()->pluck('users.id')->toArray();
-            User::whereIn('id', $techIds)->update(['disponible' => false]);
-        }
-        return back()->with('success', 'Statut mis à jour.');
-    }
-
     private function syncTechniciens(Mission $mission, $request, array $previousTechIds = [])
     {
         $technicienIds = $request->input('techniciens', []);

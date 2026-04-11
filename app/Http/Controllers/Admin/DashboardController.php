@@ -16,7 +16,6 @@ class DashboardController extends Controller
             'missions_terminees' => Mission::where('statut', 'terminee')->count(),
             'missions_en_attente' => Mission::where('statut', 'en_attente')->count(),
             'missions_en_pause' => Mission::where('statut', 'en_pause')->count(),
-            'missions_suspendues' => Mission::where('statut', 'suspendue')->count(),
             'techniciens_disponibles' => User::techniciens()->disponibles()->count(),
             'total_techniciens' => User::techniciens()->count(),
         ];
@@ -26,6 +25,15 @@ class DashboardController extends Controller
 
         $techniciens = User::techniciens()->withCount('missions')->get();
 
-        return view('admin.dashboard', compact('stats', 'recentMissions', 'techniciens'));
+        // Data for Line Chart (7 last days)
+        $chartDates = [];
+        $chartMissions = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $chartDates[] = now()->subDays($i)->format('d/m');
+            $chartMissions[] = Mission::whereDate('created_at', $date)->count();
+        }
+
+        return view('admin.dashboard', compact('stats', 'recentMissions', 'techniciens', 'chartDates', 'chartMissions'));
     }
 }

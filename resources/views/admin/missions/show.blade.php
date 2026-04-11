@@ -28,22 +28,6 @@
                 <div class="detail-section"><h4>Créée par</h4><div class="detail-value">{{ $mission->createur->name ?? 'N/A' }} · {{ $mission->created_at->format('d/m/Y H:i') }}</div></div>
             </div>
         </div>
-        <div class="card mb-3">
-            <div class="card-header"><h3><i class="las la-sync"></i> Changer le statut</h3></div>
-            <div class="card-body">
-                @if($mission->statut === 'terminee')
-                    <p class="text-muted" style="margin-bottom:0;"><i class="las la-lock"></i> La mission est terminée et le statut ne peut plus être modifié manuellement.</p>
-                @else
-                <form action="{{ route('admin.missions.statut', $mission) }}" method="POST">@csrf @method('PATCH')
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                        @foreach(\App\Models\Mission::STATUTS as $key => $label)
-                        <button type="submit" name="statut" value="{{ $key }}" class="btn btn-sm {{ $mission->statut===$key?'btn-primary':'btn-secondary' }}">{{ $label }}</button>
-                        @endforeach
-                    </div>
-                </form>
-                @endif
-            </div>
-        </div>
         <div class="card">
             <div class="card-header"><h3><i class="las la-file-alt"></i> Rapports</h3></div>
             <div class="card-body">
@@ -54,7 +38,29 @@
                     @if($rapport->difficultes)<div class="detail-section"><h4>Difficultés</h4><div class="detail-value">{{ $rapport->difficultes }}</div></div>@endif
                     <div class="detail-section"><h4>Actions réalisées</h4><div class="detail-value">{{ $rapport->actions_realisees }}</div></div>
                     @if($rapport->fichiers && count($rapport->fichiers) > 0)
-                    <div class="detail-section"><h4>Fichiers</h4><div class="file-list">@foreach($rapport->fichiers as $f)<div class="file-item"><span><i class="las la-paperclip"></i></span><a href="{{ asset('storage/'.$f['path']) }}" target="_blank" style="flex:1;">{{ $f['name'] }}</a><span class="text-muted" style="font-size:0.75rem;">{{ $f['type'] }}</span></div>@endforeach</div></div>
+                    <div class="detail-section">
+                        <h4>Pièces jointes</h4>
+                        <div class="file-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 10px;">
+                            @foreach($rapport->fichiers as $f)
+                            <div class="file-item" style="display: flex; align-items: center; padding: 10px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border-color);">
+                                <span style="margin-right: 10px; color: var(--accent-primary); font-size: 1.2rem;">
+                                    @if(str_contains($f['type'] ?? '', 'image')) <i class="las la-image"></i>
+                                    @elseif(str_contains($f['type'] ?? '', 'pdf')) <i class="las la-file-pdf"></i>
+                                    @else <i class="las la-file"></i>
+                                    @endif
+                                </span>
+                                <div style="flex: 1; overflow: hidden;">
+                                    <a href="{{ url('storage/'.$f['path']) }}" target="_blank" style="font-weight: 500; font-size: 0.85rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $f['name'] }}">
+                                        {{ $f['name'] }}
+                                    </a>
+                                    @if(isset($f['original_name']) && $f['name'] !== $f['original_name'])
+                                    <small class="text-muted" style="font-size: 0.7rem; display: block;">{{ $f['original_name'] }}</small>
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
                     @endif
                 </div>
                 @empty

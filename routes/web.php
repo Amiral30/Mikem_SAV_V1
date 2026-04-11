@@ -20,7 +20,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('missions', AdminMissionController::class);
-    Route::patch('/missions/{mission}/statut', [AdminMissionController::class, 'updateStatut'])->name('missions.statut');
     Route::get('/techniciens/{technicien}/export-pdf', [TechnicienController::class, 'exportPdf'])->name('techniciens.export');
     Route::resource('techniciens', TechnicienController::class);
 });

@@ -14,8 +14,8 @@ class RapportRequest extends FormRequest
             'deroulement' => 'required|string',
             'difficultes' => 'nullable|string',
             'actions_realisees' => 'required|string',
-            'fichiers' => 'nullable|array',
-            'fichiers.*' => 'file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx',
+            'fichiers' => 'nullable|array|max:10',
+            'fichiers.*' => 'file|max:2048|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx',
         ];
     }
 
@@ -24,7 +24,8 @@ class RapportRequest extends FormRequest
         return [
             'deroulement.required' => 'Le déroulement est obligatoire.',
             'actions_realisees.required' => 'Les actions réalisées sont obligatoires.',
-            'fichiers.*.max' => 'Chaque fichier ne doit pas dépasser 10 Mo.',
+            'fichiers.max' => 'Vous ne pouvez pas envoyer plus de 10 fichiers (images ou documents).',
+            'fichiers.*.max' => 'Chaque fichier ne doit pas dépasser 2 Mo.',
         ];
     }
 }

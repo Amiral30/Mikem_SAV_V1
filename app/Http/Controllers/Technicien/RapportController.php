@@ -37,13 +37,30 @@ class RapportController extends Controller
         if ($mission->is_groupe && !$pivot->pivot->is_chef_equipe) {
             abort(403, 'Seul le chef d\'équipe peut soumettre le rapport.');
         }
+
+        // Empêcher les doublons
+        $existingRapport = Rapport::where('mission_id', $mission->id)->where('user_id', $user->id)->first();
+        if ($existingRapport) {
+            return redirect()->route('technicien.missions.show', $mission)
+                ->with('error', 'Un rapport a déjà été soumis pour cette mission.');
+        }
+
         $fichiers = [];
         if ($request->hasFile('fichiers')) {
-            foreach ($request->file('fichiers') as $file) {
+            $descriptions = array_values($request->input('file_descriptions', []));
+            $files = array_values($request->file('fichiers'));
+            
+            foreach ($files as $index => $file) {
                 $path = $file->store('rapports/' . $mission->id, 'public');
+                // Utilisation de l'index pour faire correspondre la description
+                $customName = (isset($descriptions[$index]) && !empty($descriptions[$index])) 
+                               ? $descriptions[$index] 
+                               : $file->getClientOriginalName();
+                
                 $fichiers[] = [
                     'path' => $path,
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $customName,
+                    'original_name' => $file->getClientOriginalName(),
                     'type' => $file->getClientMimeType(),
                 ];
             }

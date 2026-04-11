@@ -62,6 +62,9 @@ class MissionController extends Controller
         if ($mission->is_groupe && !$pivot->pivot->is_chef_equipe) {
             return back()->with('error', 'Vous ne pouvez pas modifier le statut car vous n\'êtes pas chef d\'équipe !');
         }
+        if ($mission->statut === 'en_attente') {
+            return back()->with('error', 'Vous devez d\'abord accepter la mission avant de pouvoir modifier son statut.');
+        }
         $request->validate(['statut' => 'required|in:en_cours,en_pause,terminee']);
 
         if (in_array($request->statut, ['en_cours', 'en_pause'])) {
@@ -73,7 +76,7 @@ class MissionController extends Controller
 
         $mission->update(['statut' => $request->statut]);
 
-        if (in_array($request->statut, ['terminee', 'suspendue'])) {
+        if ($request->statut === 'terminee') {
             $techIds = $mission->techniciens->pluck('id')->toArray();
             User::whereIn('id', $techIds)->update(['disponible' => true]);
         } elseif (in_array($request->statut, ['en_cours', 'en_pause'])) {

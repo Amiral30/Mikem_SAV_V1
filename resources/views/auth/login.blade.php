@@ -282,8 +282,8 @@
         <div class="split-right">
             <div class="login-container">
                 <div class="logo-wrap">
-                    <!-- Assure-toi que logo.png a un fond transparent pour un bel effet -->
-                    <img src="{{ asset('images/logo.png') }}" alt="Mikem Technologie">
+                    <!-- Utilisation du grand logo Mikem -->
+                    <img src="{{ asset('images/logom.png') }}" alt="Mikem Technologie">
                 </div>
                 
                 <h2>Bienvenue</h2>

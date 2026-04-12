@@ -17,13 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminMiddleware::class,
             'technicien' => TechnicienMiddleware::class,
         ]);
-        
-        $middleware->trustProxies(at: '*');
-        
-        $middleware->validateCsrfTokens(except: [
-            '/login',
-            'logout'
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

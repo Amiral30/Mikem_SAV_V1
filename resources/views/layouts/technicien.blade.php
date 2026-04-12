@@ -7,6 +7,8 @@
     <title>@yield('title', 'Espace Technicien') - SAV Mikem</title>
     <link rel="icon" type="image/png" href="/images/minilogo.png">
     <link rel="stylesheet" href="/css/app.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f3460">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 </head>
 <body>
@@ -103,5 +105,12 @@
         }
     </script>
     @yield('scripts')
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
+    </script>
 </body>
 </html>

@@ -25,14 +25,14 @@
             <tbody>
                 @forelse($missions as $mission)
                 <tr>
-                    <td>{{ $mission->id }}</td>
-                    <td><a href="{{ route('admin.missions.show', $mission) }}" style="color:var(--text-primary);font-weight:600;">{{ Str::limit($mission->titre, 35) }}</a></td>
-                    <td>{{ $mission->type_mission }}</td>
-                    <td style="max-width:200px;">{{ Str::limit($mission->adresse, 30) }}</td>
-                    <td>{{ $mission->date_mission->format('d/m/Y') }}</td>
-                    <td><span class="badge {{ $mission->statut_class }}">{{ $mission->statut_label }}</span></td>
-                    <td><span style="font-size:0.85rem;">{{ $mission->techniciens->count() }} tech.</span> @if($mission->is_groupe)<span class="badge badge-info" style="font-size:0.65rem;">Groupe</span>@endif</td>
-                    <td>
+                    <td data-label="#">{{ $mission->id }}</td>
+                    <td data-label="Titre"><a href="{{ route('admin.missions.show', $mission) }}" style="color:var(--text-primary);font-weight:600;">{{ Str::limit($mission->titre, 35) }}</a></td>
+                    <td data-label="Type">{{ $mission->type_mission }}</td>
+                    <td data-label="Adresse" style="max-width:200px;">{{ Str::limit($mission->adresse, 30) }}</td>
+                    <td data-label="Date">{{ $mission->date_mission->format('d/m/Y') }}</td>
+                    <td data-label="Statut"><span class="badge {{ $mission->statut_class }}">{{ $mission->statut_label }}</span></td>
+                    <td data-label="Équipe"><span style="font-size:0.85rem;">{{ $mission->techniciens->count() }} tech.</span> @if($mission->is_groupe)<span class="badge badge-info" style="font-size:0.65rem;">Groupe</span>@endif</td>
+                    <td data-label="Actions">
                         <div class="btn-group">
                             <a href="{{ route('admin.missions.show', $mission) }}" class="btn btn-secondary btn-sm"><i class="las la-eye"></i></a>
                             @if($mission->statut === 'en_attente')

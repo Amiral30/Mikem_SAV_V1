@@ -19,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         
         $middleware->trustProxies(at: '*');
+        
+        $middleware->validateCsrfTokens(except: [
+            '/login',
+            'logout'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

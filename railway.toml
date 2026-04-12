@@ -1,8 +1,14 @@
 [build]
 builder = "nixpacks"
 
-[phases.build]
+[phases.setup]
+nixPkgs = ["php82", "php82Extensions.gd", "php82Extensions.zip"]
+
+[phases.install]
 cmds = ["composer install --no-dev --optimize-autoloader"]
+
+[phases.build]
+cmds = ["echo 'Skipping NPM build because assets are pre-compiled'"]
 
 [start]
 cmd = "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host 0.0.0.0 --port $PORT"

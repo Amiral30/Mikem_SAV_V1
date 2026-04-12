@@ -6,6 +6,7 @@ nixPkgs = ["php82", "php82Extensions.gd", "php82Extensions.zip", "php82Extension
 
 [phases.prestart]
 cmds = [
+    "mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache",
     "php artisan config:clear",
     "php artisan route:clear",
     "php artisan view:clear",

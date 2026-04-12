@@ -5,4 +5,10 @@ builder = "nixpacks"
 nixPkgs = ["php82", "php82Extensions.gd", "php82Extensions.zip", "php82Extensions.pdo_mysql"]
 
 [phases.prestart]
-cmds = ["php artisan migrate --force", "php artisan db:seed --force"]
+cmds = [
+    "php artisan config:clear",
+    "php artisan route:clear",
+    "php artisan view:clear",
+    "php artisan migrate --force",
+    "php artisan db:seed --force"
+]

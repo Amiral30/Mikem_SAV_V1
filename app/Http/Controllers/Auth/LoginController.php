@@ -25,8 +25,19 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            
+            $user = Auth::user();
+            \Illuminate\Support\Facades\Log::info('Tentative de connexion réussie', [
+                'email' => $user->email,
+                'role' => $user->role,
+                'is_admin' => $user->isAdmin(),
+                'is_technicien' => $user->isTechnicien()
+            ]);
+            
             return $this->redirectByRole();
         }
+
+        \Illuminate\Support\Facades\Log::warning('Tentative de connexion échouée', ['email' => $credentials['email']]);
 
         return back()->withErrors([
             'email' => 'Les identifiants fournis ne correspondent pas.',

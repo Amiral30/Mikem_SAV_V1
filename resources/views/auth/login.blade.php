@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Mikem Technologie</title>
+    <link rel="icon" type="image/png" href="/images/minilogo.png">
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -283,7 +284,7 @@
             <div class="login-container">
                 <div class="logo-wrap">
                     <!-- Utilisation du grand logo Mikem -->
-                    <img src="{{ asset('images/logom.png') }}" alt="Mikem Technologie">
+                    <img src="/images/logom.png" alt="Mikem Technologie">
                 </div>
                 
                 <h2>Bienvenue</h2>
@@ -296,7 +297,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ url('/login') }}">
+                <form method="POST" action="/login">
                     @csrf
                     
                     <div class="form-group">

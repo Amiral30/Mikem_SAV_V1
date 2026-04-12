@@ -1,5 +1,8 @@
 [build]
 builder = "nixpacks"
 
+[phases.build]
+cmds = ["composer install --no-dev --optimize-autoloader"]
+
 [start]
 cmd = "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host 0.0.0.0 --port $PORT"

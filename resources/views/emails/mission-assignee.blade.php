@@ -22,7 +22,7 @@
         <div class="header">
             <!-- Le logo sera chargé via l'URL complète -->
             <div style="background: white; display: inline-block; padding: 10px 20px; border-radius: 8px; margin-bottom: 15px;">
-                <img src="{{ asset('images/logo.png') }}" alt="SAV MIKEM" style="max-height: 40px; display: block;">
+                <img src="{{ $message->embed(public_path('images/logo.png')) }}" alt="SAV MIKEM" style="max-height: 40px; display: block;">
             </div>
             <p style="margin: 0; font-size: 16px; font-weight: bold;">Nouvelle intervention requise</p>
         </div>

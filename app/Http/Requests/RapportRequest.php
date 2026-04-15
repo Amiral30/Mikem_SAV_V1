@@ -10,10 +10,16 @@ class RapportRequest extends FormRequest
 
     public function rules(): array
     {
+        // À la création (POST) la fiche est obligatoire, à l'édition (PUT) elle est optionnelle
+        $ficheRule = $this->isMethod('post')
+            ? 'required|file|max:2048|mimes:jpg,jpeg,png,pdf'
+            : 'nullable|file|max:2048|mimes:jpg,jpeg,png,pdf';
+
         return [
             'deroulement' => 'required|string',
             'difficultes' => 'nullable|string',
             'actions_realisees' => 'required|string',
+            'fiche_passage' => $ficheRule,
             'fichiers' => 'nullable|array|max:10',
             'fichiers.*' => 'file|max:2048|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx',
         ];

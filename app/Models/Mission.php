@@ -13,18 +13,26 @@ class Mission extends Model
         'titre', 'description', 'adresse', 'type_mission',
         'prix_deplacement', 'date_mission', 'statut',
         'is_groupe', 'chef_equipe_id', 'created_by',
+        'started_at', 'work_finished_at', 'submitted_at', 'validated_at',
     ];
 
     protected $casts = [
         'date_mission' => 'date',
         'prix_deplacement' => 'decimal:2',
         'is_groupe' => 'boolean',
+        'started_at' => 'datetime',
+        'work_finished_at' => 'datetime',
+        'submitted_at' => 'datetime',
+        'validated_at' => 'datetime',
     ];
 
     const STATUTS = [
         'en_attente' => 'En attente',
         'en_cours' => 'En cours',
         'en_pause' => 'En pause',
+        'suspendue' => 'Suspendue',
+        'soumis' => 'Rapport Soumis',
+        'a_modifier' => 'À corriger',
         'terminee' => 'Terminée',
     ];
 
@@ -32,6 +40,9 @@ class Mission extends Model
         'en_attente' => '#ffc107',
         'en_cours' => '#2196f3',
         'en_pause' => '#ff9800',
+        'suspendue' => '#6c757d',
+        'soumis' => '#9c27b0', // Violet pour soumis
+        'a_modifier' => '#f44336', // Rouge pour corrections
         'terminee' => '#4caf50',
     ];
 
@@ -39,6 +50,9 @@ class Mission extends Model
         'en_attente' => 'badge-warning',
         'en_cours' => 'badge-info',
         'en_pause' => 'badge-pause',
+        'suspendue' => 'badge-secondary',
+        'soumis' => 'badge-purple',
+        'a_modifier' => 'badge-danger',
         'terminee' => 'badge-success',
     ];
 

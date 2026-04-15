@@ -18,11 +18,16 @@ class User extends Authenticatable
         'role',
         'telephone',
         'disponible',
+        'verification_code',
+        'onboarding_completed',
+        'profile_photo',
+        'verification_code_expires_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_code',
     ];
 
     protected function casts(): array
@@ -31,6 +36,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'disponible' => 'boolean',
+            'onboarding_completed' => 'boolean',
+            'verification_code_expires_at' => 'datetime',
         ];
     }
 

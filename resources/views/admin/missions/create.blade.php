@@ -11,7 +11,7 @@
             <form action="{{ route('admin.missions.store') }}" method="POST">
                 @csrf
                 <div class="form-group"><label for="titre">Titre *</label><input type="text" id="titre" name="titre" class="form-control" value="{{ old('titre') }}" placeholder="Ex: Réparation climatisation" required></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="details-grid" style="gap:16px;">
                     <div class="form-group"><label for="type_mission">Type *</label>
                         <select id="type_mission" name="type_mission" class="form-control" required>
                             <option value="">Sélectionner...</option>

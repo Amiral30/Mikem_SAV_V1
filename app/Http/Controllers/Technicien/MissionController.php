@@ -45,7 +45,10 @@ class MissionController extends Controller
 
         $mission->techniciens()->updateExistingPivot($user->id, ['accepted' => true]);
         if ($mission->statut === 'en_attente') {
-            $mission->update(['statut' => 'en_cours']);
+            $mission->update([
+                'statut' => 'en_cours',
+                'started_at' => now(), // Capte l'heure de début
+            ]);
             $techIds = $mission->techniciens->pluck('id')->toArray();
             User::whereIn('id', $techIds)->update(['disponible' => false]);
         }
@@ -74,12 +77,18 @@ class MissionController extends Controller
             }
         }
 
+        // Logique spéciale pour "Terminée" (V13 Workflow)
+        if ($request->statut === 'terminee') {
+            // Selon ta demande : on garde 'en_cours' mais on capte la date de fin technique
+            $mission->update([
+                'work_finished_at' => now(),
+            ]);
+            return back()->with('success', 'Travail physique terminé. Veuillez rédiger votre rapport maintenant.');
+        }
+
         $mission->update(['statut' => $request->statut]);
 
-        if ($request->statut === 'terminee') {
-            $techIds = $mission->techniciens->pluck('id')->toArray();
-            User::whereIn('id', $techIds)->update(['disponible' => true]);
-        } elseif (in_array($request->statut, ['en_cours', 'en_pause'])) {
+        if (in_array($request->statut, ['en_cours', 'en_pause'])) {
             $techIds = $mission->techniciens->pluck('id')->toArray();
             User::whereIn('id', $techIds)->update(['disponible' => false]);
         }

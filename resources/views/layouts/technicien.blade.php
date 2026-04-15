@@ -2,16 +2,24 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Espace Technicien') - SAV Mikem</title>
     <link rel="icon" type="image/png" href="/images/minilogo.png">
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/app.css?v={{ time() }}">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0f3460">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    
+    <!-- Meta tags pour iOS (iPhone/iPad) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SAV Mikem">
+    <link rel="apple-touch-icon" href="/images/logom.png">
+
+    @yield('styles')
 </head>
-<body>
+<body class="is-technician">
     <script>
         if(localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
     </script>
@@ -37,11 +45,21 @@
                     <a href="{{ route('technicien.historique') }}" class="nav-link {{ request()->routeIs('technicien.historique') ? 'active' : '' }}">
                         <span class="nav-icon"><i class="las la-history"></i></span> Historique
                     </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">Paramètres</div>
+                    <a href="{{ route('technicien.profile.index') }}" class="nav-link {{ request()->routeIs('technicien.profile.*') ? 'active' : '' }}">
+                        <span class="nav-icon"><i class="las la-user-circle"></i></span> Mon Profil
+                    </a>
                 </div>
             </nav>
             <div class="sidebar-footer">
                 <div class="user-info">
-                    <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
+                    @if(auth()->user()->profile_photo)
+                        <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="Avatar" 
+                             style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid var(--accent-primary);">
+                    @else
+                        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
+                    @endif
                     <div class="user-details">
                         <div class="user-name">{{ auth()->user()->name }}</div>
                         <div class="user-role">Technicien</div>
@@ -111,6 +129,20 @@
                 navigator.serviceWorker.register('/sw.js');
             });
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = document.querySelectorAll('tr[data-href]');
+            rows.forEach(row => {
+                row.classList.add('clickable-row');
+                row.addEventListener('click', (e) => {
+                    // Ne pas déclencher si on clique sur un lien ou un bouton à l'intérieur de la ligne
+                    if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !e.target.closest('a') && !e.target.closest('button')) {
+                        window.location.href = row.dataset.href;
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

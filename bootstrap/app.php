@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => AdminMiddleware::class,
             'technicien' => TechnicienMiddleware::class,
+            'check.onboarding' => \App\Http\Middleware\CheckOnboarding::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -54,9 +54,17 @@ class LoginController extends Controller
 
     private function redirectByRole()
     {
-        if (Auth::user()->isAdmin()) {
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
+
+        // Si c'est un technicien qui n'a pas fini son onboarding
+        if ($user->isTechnicien() && !$user->onboarding_completed) {
+            return redirect()->route('technicien.onboarding.show');
+        }
+
         return redirect()->route('technicien.dashboard');
     }
 }

@@ -13,9 +13,16 @@
                 <div class="form-group"><label for="name">Nom complet *</label><input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required></div>
                 <div class="form-group"><label for="email">Email *</label><input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required></div>
                 <div class="form-group"><label for="telephone">Téléphone</label><input type="text" id="telephone" name="telephone" class="form-control" value="{{ old('telephone') }}"></div>
-                <div class="form-group"><label for="password">Mot de passe *</label><input type="password" id="password" name="password" class="form-control" required></div>
-                <div class="form-group"><label for="password_confirmation">Confirmer *</label><input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required></div>
-                <div class="btn-group mt-3"><button type="submit" class="btn btn-primary btn-lg">Créer</button><a href="{{ route('admin.techniciens.index') }}" class="btn btn-secondary btn-lg">Annuler</a></div>
+                
+                <div style="background: var(--bg-primary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin: 20px 0;">
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">
+                        <i class="las la-info-circle" style="color: var(--accent-primary); font-size: 1.1rem; vertical-align: middle;"></i> 
+                        Le mot de passe par défaut est : <strong>tech123</strong>. <br>
+                        Le technicien devra obligatoirement le changer lors de sa première connexion.
+                    </p>
+                </div>
+
+                <div class="btn-group mt-3"><button type="submit" class="btn btn-primary btn-lg">Créer le technicien</button><a href="{{ route('admin.techniciens.index') }}" class="btn btn-secondary btn-lg">Annuler</a></div>
             </form>
         </div>
     </div>

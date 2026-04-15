@@ -21,13 +21,27 @@
             <thead><tr><th>Technicien</th><th>Email</th><th>Téléphone</th><th>Missions</th><th>Disponibilité</th><th>Actions</th></tr></thead>
             <tbody>
                 @forelse($techniciens as $tech)
-                <tr>
-                    <td><div style="display:flex;align-items:center;gap:10px;"><div class="member-avatar">{{ strtoupper(substr($tech->name, 0, 2)) }}</div><a href="{{ route('admin.techniciens.show', $tech) }}" style="color:var(--text-primary);font-weight:600;">{{ $tech->name }}</a></div></td>
-                    <td>{{ $tech->email }}</td>
-                    <td>{{ $tech->telephone ?? '-' }}</td>
-                    <td>{{ $tech->missions_count }}</td>
-                    <td><span class="badge {{ $tech->disponible?'badge-disponible':'badge-occupe' }}">{{ $tech->disponible?'Disponible':'En mission' }}</span></td>
-                    <td><div class="btn-group"><a href="{{ route('admin.techniciens.show', $tech) }}" class="btn btn-secondary btn-sm"><i class="las la-eye"></i></a><a href="{{ route('admin.techniciens.edit', $tech) }}" class="btn btn-secondary btn-sm"><i class="las la-pen"></i></a><form action="{{ route('admin.techniciens.destroy', $tech) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">@csrf @method('DELETE')<button class="btn btn-danger btn-sm"><i class="las la-trash"></i></button></form></div></td>
+                <tr data-href="{{ route('admin.techniciens.show', $tech) }}">
+                    <td data-label="Technicien">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            @if($tech->profile_photo)
+                                <img src="{{ asset('storage/' . $tech->profile_photo) }}" alt="Avatar" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-primary);">
+                            @else
+                                <div class="member-avatar">{{ strtoupper(substr($tech->name, 0, 2)) }}</div>
+                            @endif
+                            <strong>{{ $tech->name }}</strong>
+                        </div>
+                    </td>
+                    <td data-label="Email">{{ $tech->email }}</td>
+                    <td data-label="Téléphone">{{ $tech->telephone ?? '-' }}</td>
+                    <td data-label="Missions">{{ $tech->missions_count }}</td>
+                    <td data-label="Disponibilité">
+                        <span class="badge {{ $tech->disponible ? 'badge-disponible' : 'badge-occupe' }}">
+                            <i class="las {{ $tech->disponible ? 'la-check-circle' : 'la-user-clock' }}"></i>
+                            {{ $tech->disponible ? 'Disponible' : 'En mission' }}
+                        </span>
+                    </td>
+                    <td data-label="Actions"><div class="btn-group"><a href="{{ route('admin.techniciens.show', $tech) }}" class="btn btn-secondary btn-sm"><i class="las la-eye"></i></a><form action="{{ route('admin.techniciens.destroy', $tech) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">@csrf @method('DELETE')<button class="btn btn-danger btn-sm"><i class="las la-trash"></i></button></form></div></td>
                 </tr>
                 @empty
                 <tr><td colspan="6" class="text-center text-muted" style="padding:40px;">Aucun technicien.<br><a href="{{ route('admin.techniciens.create') }}" class="btn btn-primary btn-sm mt-2">Ajouter</a></td></tr>

@@ -16,8 +16,27 @@
                     <td data-label="Type">{{ $mission->type_mission }}</td>
                     <td data-label="Date">{{ $mission->date_mission->format('d/m/Y') }}</td>
                     <td data-label="Adresse">{{ Str::limit($mission->adresse, 25) }}</td>
-                    <td data-label="Rapport">@if($rapport)<span class="badge badge-success">Soumis</span>@else<a href="{{ route('technicien.rapports.create', $mission) }}" class="badge badge-warning" style="text-decoration:none;">À rédiger</a>@endif</td>
-                    <td data-label="Action"><div class="btn-group"><a href="{{ route('technicien.missions.show', $mission) }}" class="btn btn-secondary btn-sm" title="Voir mission">👁️</a>@if($rapport)<a href="{{ route('technicien.rapports.show', ['mission'=>$mission,'rapport'=>$rapport]) }}" class="btn btn-secondary btn-sm" title="Voir rapport">📝</a>@endif</div></td>
+                    <td data-label="Rapport">
+                        @if($rapport)
+                            <span class="badge badge-success"><i class="las la-check-circle"></i> Soumis</span>
+                        @else
+                            <a href="{{ route('technicien.rapports.create', $mission) }}" class="badge badge-warning" style="text-decoration:none;">
+                                <i class="las la-edit"></i> À rédiger
+                            </a>
+                        @endif
+                    </td>
+                    <td data-label="Action">
+                        <div class="btn-group">
+                            <a href="{{ route('technicien.missions.show', $mission) }}" class="btn btn-secondary btn-sm" title="Voir mission">
+                                <i class="las la-eye"></i>
+                            </a>
+                            @if($rapport)
+                            <a href="{{ route('technicien.rapports.show', ['mission'=>$mission,'rapport'=>$rapport]) }}" class="btn btn-secondary btn-sm" title="Voir rapport">
+                                <i class="las la-file-alt"></i>
+                            </a>
+                            @endif
+                        </div>
+                    </td>
                 </tr>
                 @empty<tr><td colspan="6" class="text-center text-muted" style="padding:40px;">Aucune mission terminée.</td></tr>
                 @endforelse

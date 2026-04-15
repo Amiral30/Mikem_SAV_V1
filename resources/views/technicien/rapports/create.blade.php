@@ -54,9 +54,28 @@
                     <textarea id="difficultes" name="difficultes" class="form-control" rows="3" placeholder="Y a-t-il eu des imprévus, des pièces manquantes, un accès difficile ?" style="resize: vertical; padding: 15px; border-radius: 8px;">{{ old('difficultes') }}</textarea>
                 </div>
                 
+                {{-- ===== FICHE DE PASSAGE SIGNÉE (OBLIGATOIRE) ===== --}}
+                <div class="form-group" style="margin-bottom: 30px; border: 2px solid var(--accent-primary); border-radius: 12px; padding: 20px; background: rgba(var(--accent-primary-rgb, 15,52,96), 0.04);">
+                    <label style="font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 1.05rem;">
+                        <i class="las la-file-signature" style="font-size: 1.5rem;"></i>
+                        Fiche de Passage Signée par le Client <span class="text-danger">*</span>
+                    </label>
+                    <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 15px;">
+                        <i class="las la-info-circle"></i> Ce document est <strong>obligatoire</strong> pour valider votre rapport. Prenez une photo nette de la fiche signée par le client.
+                    </p>
+                    <div class="fiche-upload-area" onclick="document.getElementById('ficheInput').click()" style="border: 2px dashed var(--accent-primary); text-align: center; padding: 25px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                        <div><i class="las la-camera" style="font-size: 3rem; color: var(--accent-primary);"></i></div>
+                        <p style="margin: 8px 0 4px; font-weight: bold; color: var(--text-primary);">Cliquez pour photographier / charger la fiche</p>
+                        <p class="text-muted" style="font-size: 0.8rem; margin: 0;">JPG, PNG ou PDF — 2 Mo max</p>
+                    </div>
+                    <input type="file" id="ficheInput" name="fiche_passage" accept=".jpg,.jpeg,.png,.pdf" style="display:none;" onchange="showFiche(this)" required>
+                    <div id="fichePreview" style="margin-top: 12px;"></div>
+                </div>
+
+                {{-- ===== PIÈCES JOINTES OPTIONNELLES ===== --}}
                 <div class="form-group" style="margin-bottom: 35px;">
                     <label style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                        <i class="las la-paperclip text-muted"></i> Pièces jointes (Photos, PDF, etc.)
+                        <i class="las la-paperclip text-muted"></i> Autres pièces jointes (Photos, PDF, etc.)
                     </label>
                     <div class="file-upload-area" onclick="document.getElementById('fileInput').click()" style="border: 2px dashed var(--border-color); text-align: center; padding: 30px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
                         <div class="upload-icon"><i class="las la-cloud-upload-alt" style="font-size: 3.5rem; color: var(--accent-primary);"></i></div>
@@ -67,9 +86,9 @@
                     <div id="fileList" class="file-list mt-3" style="display: flex; flex-direction: column; gap: 10px;"></div>
                     <button type="button" id="addMoreBtn" class="btn btn-outline-primary mt-2" onclick="document.getElementById('fileInput').click()" style="display: none; padding: 12px; width: 100%; background: rgba(0,0,0,0.02); border: 2px dashed var(--accent-primary); border-radius: 8px; color: var(--accent-primary); font-weight: bold; cursor: pointer; transition: 0.2s;"><i class="las la-plus-circle" style="font-size:1.3rem;"></i> Cliquer pour ajouter un autre fichier</button>
                 </div>
-                
+
                 <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 25px;">
-                
+
                 <div style="display: flex; justify-content: flex-end; gap: 15px;">
                     <a href="{{ route('technicien.missions.show', $mission) }}" class="btn btn-secondary btn-lg" style="padding: 12px 25px; border-radius: 8px;">Annuler</a>
                     <button type="submit" class="btn btn-primary btn-lg" style="padding: 12px 35px; border-radius: 8px; font-weight: bold;"><i class="las la-paper-plane" style="margin-right: 8px;"></i> Soumettre le Rapport</button>
@@ -82,6 +101,25 @@
 
 @section('scripts')
 <script>
+    // === Fiche de passage ===
+    function showFiche(input) {
+        const preview = document.getElementById('fichePreview');
+        const file = input.files[0];
+        if (!file) { preview.innerHTML = ''; return; }
+        if (file.type.startsWith('image/')) {
+            const url = URL.createObjectURL(file);
+            preview.innerHTML = `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-input);border-radius:8px;border:1px solid var(--accent-primary);">
+                <img src="${url}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
+                <div><div style="font-weight:600;color:var(--text-primary)">${file.name}</div><div class="text-muted" style="font-size:0.8rem">✅ Fiche chargée</div></div>
+            </div>`;
+        } else {
+            preview.innerHTML = `<div style="padding:12px;background:var(--bg-input);border-radius:8px;border:1px solid var(--accent-primary);">
+                <i class="las la-file-pdf" style="color:red;font-size:1.5rem;"></i> <strong>${file.name}</strong> — ✅ Fiche PDF chargée
+            </div>`;
+        }
+    }
+
+    // === Pièces jointes ===
     function formatBytes(bytes) {
         if (bytes === 0) return '0 Octet';
         const k = 1024;
@@ -90,132 +128,55 @@
         return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
-    // Utilisation de DataTransfer pour accumuler les fichiers sélectionnés
     const dt = new DataTransfer();
-
-    // Stocke aussi les fichiers rejetés pour les afficher en rouge
     let rejectedFiles = [];
 
     function showFiles(input) {
-        rejectedFiles = []; // Reset des erreurs visuelles pour cette sélection
-        
+        rejectedFiles = [];
         for (let file of input.files) {
-            if (dt.items.length >= 10) {
-                alert('⚠️ Limite de 10 fichiers autorisés atteinte.');
-                break;
-            }
-            
-            // Validation JS stricte pour empêcher le rechargement serveur (qui vide le form)
-            if (file.size > 2 * 1024 * 1024) { // 2 Mo strict
-                rejectedFiles.push({ file: file, reason: 'Poids supérieur à 2 Mo' });
-                continue;
-            }
-            if (file.name.length > 80) { // Nom raisonnable
-                rejectedFiles.push({ file: file, reason: 'Nom du fichier beaucoup trop long' });
-                continue;
-            }
-
+            if (dt.items.length >= 10) { alert('⚠️ Limite de 10 fichiers atteinte.'); break; }
+            if (file.size > 2 * 1024 * 1024) { rejectedFiles.push({ file, reason: 'Poids supérieur à 2 Mo' }); continue; }
             dt.items.add(file);
         }
-        
-        // Mettre à jour l'input pour la soumission du formulaire
         input.files = dt.files;
-        
         renderFileList();
     }
-    
+
     function removeFile(index) {
         const newDt = new DataTransfer();
-        // Sauvegarder les descriptions actuelles avant re-rendu, en enlevant celle qu'on supprime
-        const descriptions = Array.from(document.querySelectorAll('input[name="file_descriptions[]"]')).map(i => i.value);
-        descriptions.splice(index, 1); 
-        
-        for (let i = 0; i < dt.items.length; i++) {
-            if (i !== index) newDt.items.add(dt.files[i]);
-        }
-        
+        for (let i = 0; i < dt.items.length; i++) { if (i !== index) newDt.items.add(dt.files[i]); }
         dt.items.clear();
-        for(let file of newDt.files) dt.items.add(file);
+        for (let file of newDt.files) dt.items.add(file);
         document.getElementById('fileInput').files = dt.files;
-        
-        renderFileList(descriptions);
+        renderFileList();
     }
 
-    function renderFileList(preservedDescriptions = []) {
-        const list = document.getElementById('fileList'); 
-        
-        // Si aucune description fournie (ex: ajout d'un fichier), on récupère celles en cours dans le DOM
-        if (preservedDescriptions.length === 0 && document.querySelectorAll('input[name="file_descriptions[]"]').length > 0) {
-           preservedDescriptions = Array.from(document.querySelectorAll('input[name="file_descriptions[]"]')).map(i => i.value);
-        }
-        
+    function renderFileList() {
+        const list = document.getElementById('fileList');
         list.innerHTML = '';
-        
         Array.from(dt.files).forEach((f, index) => {
-            const d = document.createElement('div'); 
-            d.className='file-item'; 
-            d.style.cssText = 'display:flex; flex-direction:column; gap: 10px; padding: 15px; background: var(--bg-input); border-radius: 8px; border-left: 4px solid var(--info); position: relative; margin-bottom: 5px;';
-            
-            // Logique de prévisualisation (Image vs autre fichier)
-            let previewHTML = '';
-            if (f.type.startsWith('image/')) {
-                const url = URL.createObjectURL(f);
-                previewHTML = `<img src="${url}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color); margin-right: 15px;" alt="preview">`;
-            } else {
-                let iconClass = 'las la-file';
-                if(f.type.includes('pdf')) iconClass = 'las la-file-pdf text-danger';
-                previewHTML = `<i class="${iconClass}" style="font-size: 2.2rem; color: var(--info); margin-right: 15px; width: 45px; text-align: center;"></i>`;
-            }
-
-            // Récupérer la valeur de la description si elle avait été tapée
-            const descValue = preservedDescriptions[index] || '';
-
-            d.innerHTML = `
-                <button type="button" onclick="removeFile(${index})" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.4rem;" title="Retirer le fichier"><i class="las la-times-circle"></i></button>
-                <div style="display: flex; align-items: center; justify-content: space-between; padding-right: 35px;">
-                    <div style="display: flex; align-items: center; overflow: hidden;">
-                        ${previewHTML}
-                        <span style="font-weight: 500; font-size: 0.95rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;" title="${f.name}">${f.name}</span>
-                    </div>
-                    <span class="text-muted" style="font-size:0.85rem; font-weight: bold; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 4px;">${formatBytes(f.size)}</span>
-                </div>
-                <!-- Titre / Description -->
-                <input type="text" name="file_descriptions[]" class="form-control" value="${descValue}" placeholder="Description du fichier (ex: routeur défectueux)" style="margin-top: 5px; border-radius: 6px; padding: 10px; font-size: 0.9rem;">
-            `; 
-            list.appendChild(d);  
-        });
-
-        // Affiche les fichiers rejetés en rouge
-        rejectedFiles.forEach(rej => {
             const d = document.createElement('div');
-            d.style.cssText = 'display:flex; flex-direction:column; gap: 5px; padding: 15px; background: rgba(220, 53, 69, 0.05); border-radius: 8px; border: 2px dashed var(--danger); margin-bottom: 5px;';
+            d.style.cssText = 'display:flex;flex-direction:column;gap:8px;padding:15px;background:var(--bg-input);border-radius:8px;border-left:4px solid var(--accent-primary);position:relative;';
+            let icon = f.type.startsWith('image/') ? `<img src="${URL.createObjectURL(f)}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">` : `<i class="las la-file-pdf" style="font-size:2rem;color:red;"></i>`;
             d.innerHTML = `
-                <div style="display: flex; align-items: center; color: var(--danger); font-weight: bold;">
-                    <i class="las la-exclamation-triangle" style="font-size: 1.6rem; margin-right: 10px;"></i>
-                    Erreur : ${rej.file.name}
+                <button type="button" onclick="removeFile(${index})" style="position:absolute;top:10px;right:10px;background:none;border:none;color:var(--danger);cursor:pointer;font-size:1.3rem;"><i class="las la-times-circle"></i></button>
+                <div style="display:flex;align-items:center;gap:12px;padding-right:30px;">
+                    ${icon}
+                    <span style="flex:1;font-size:0.9rem;font-weight:500;">${f.name} <span class="text-muted">(${formatBytes(f.size)})</span></span>
                 </div>
-                <div style="font-size: 0.85rem; color: var(--danger); opacity: 0.8; margin-left: 36px;">
-                    Raison : ${rej.reason} — Fichier ignoré, il ne sera pas envoyé.
-                </div>
+                <input type="text" name="file_descriptions[]" class="form-control" placeholder="Description du fichier (ex: routeur défectueux)" style="border-radius:6px;padding:10px;font-size:0.9rem;">
             `;
             list.appendChild(d);
         });
-
-        // Affiche ou masque le bouton + Ajouter
-        const btnMore = document.getElementById('addMoreBtn');
-        if (dt.items.length > 0 && dt.items.length < 10) {
-            btnMore.style.display = 'block';
-        } else {
-            btnMore.style.display = 'none';
-        }
+        rejectedFiles.forEach(rej => {
+            const d = document.createElement('div');
+            d.style.cssText = 'padding:10px;background:rgba(220,53,69,0.05);border-radius:8px;border:1px dashed red;color:red;font-size:0.85rem;';
+            d.innerHTML = `<i class="las la-exclamation-triangle"></i> <strong>${rej.file.name}</strong> — ${rej.reason}`;
+            list.appendChild(d);
+        });
+        document.getElementById('addMoreBtn').style.display = (dt.items.length > 0 && dt.items.length < 10) ? 'block' : 'none';
     }
 
-    // Effet Hover sur la zone de dépôt
-    const dropArea = document.querySelector('.file-upload-area');
-    dropArea.addEventListener('mouseover', () => { dropArea.style.borderColor = 'var(--accent-primary)'; dropArea.style.background = 'var(--bg-input)'; });
-    dropArea.addEventListener('mouseout', () => { dropArea.style.borderColor = 'var(--border-color)'; dropArea.style.background = 'transparent'; });
-
-    // Empêcher le double-clic à la soumission
     document.querySelector('form').addEventListener('submit', function(e) {
         const btn = this.querySelector('button[type="submit"]');
         if (btn.disabled) return e.preventDefault();

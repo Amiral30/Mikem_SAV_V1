@@ -12,6 +12,7 @@ class Rapport extends Model
     protected $fillable = [
         'mission_id', 'user_id', 'deroulement',
         'difficultes', 'actions_realisees', 'fichiers',
+        'fiche_passage_path', 'admin_notes',
     ];
 
     protected $casts = [

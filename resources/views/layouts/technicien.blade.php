@@ -18,6 +18,14 @@
     <link rel="apple-touch-icon" href="/images/logom.png">
 
     @yield('styles')
+    <style>
+        /* Ajustement de précision pour le bouton de thème sur mobile */
+        @media (max-width: 900px) {
+            #theme-icon {
+                transform: translateX(-2px);
+            }
+        }
+    </style>
 </head>
 <body class="is-technician">
     <script>
@@ -78,8 +86,8 @@
                     <p>@yield('page-subtitle', '')</p>
                 </div>
                 <div class="topbar-actions">
-                    <button id="theme-toggle" class="btn btn-secondary" style="border-radius: 50%; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; margin-right: 8px;" title="Basculer le thème">
-                        <i class="las la-moon" id="theme-icon" style="font-size: 1.3rem;"></i>
+                    <button id="theme-toggle" class="btn btn-secondary" style="border-radius: 50%; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; margin-right: 8px; line-height: 0; gap: 0; overflow: hidden;" title="Basculer le thème">
+                        <i class="las la-moon" id="theme-icon" style="font-size: 1.35rem;"></i>
                     </button>
                     @yield('topbar-actions')
                 </div>
@@ -100,15 +108,18 @@
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
+            
+            // Mise à jour de l'icône
             if(theme === 'dark') {
-                themeIcon.classList.remove('la-moon');
-                themeIcon.classList.add('la-sun');
+                themeIcon.className = 'las la-sun';
+                themeIcon.style.color = '#f1d468ff'; // Jaune soleil pour le mode sombre
             } else {
-                themeIcon.classList.remove('la-sun');
-                themeIcon.classList.add('la-moon');
+                themeIcon.className = 'las la-moon';
+                themeIcon.style.color = 'var(--text-primary)'; // Couleur normale pour le mode clair
             }
         }
 
+        // Initialisation immédiate au chargement
         const storedTheme = localStorage.getItem('theme') || 'light';
         setTheme(storedTheme);
 

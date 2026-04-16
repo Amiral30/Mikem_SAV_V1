@@ -40,6 +40,12 @@
                         <span class="nav-icon"><i class="las la-tools"></i></span> Techniciens
                     </a>
                 </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Paramètres</div>
+                    <a href="{{ route('admin.profile.edit') }}" class="nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+                        <span class="nav-icon"><i class="las la-lock"></i></span> Sécurité
+                    </a>
+                </div>
             </nav>
             <div class="sidebar-footer">
                 <div class="user-info">

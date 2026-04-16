@@ -263,10 +263,25 @@
                 padding: 2rem;
                 border-radius: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-                margin-top: -15px; /* Moins de chevauchement pour ne pas cacher le texte ! */
+                margin-top: 25px; /* On pousse le formulaire vers le bas pour ne plus chevaucher le texte */
                 z-index: 20;
                 position: relative;
             }
+            .login-footer {
+                position: static !important;
+                margin-top: 30px;
+                padding-bottom: 20px;
+            }
+        }
+
+        .login-footer {
+            position: absolute;
+            bottom: 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            opacity: 0.7;
+            width: 100%;
         }
     </style>
 </head>
@@ -274,9 +289,11 @@
     <div class="split-layout">
         <div class="split-left">
             <div class="side-content">
-                <h1> SAV MIKEM TECHNOLOGIES</h1>
-                <h2>Plateforme de gestion des interventions</h2><br><br><br>  
-                <p>Outil centralisé pour suivre les requêtes SAV, coordonner les équipes de techniciens et générer des rapports fiables.</p>
+                <h1>Mikem SAV Intervention Manager</h1>
+                <h2>Optimisez la gestion de vos interventions en toute sécurité.</h2><br><br><br>  
+                <!-- <p>Une plateforme fiable, conçue pour les professionnels.</p> -->
+                <p>L’excellence dans la gestion des interventions techniques.</p>
+                <p>Sécurité, fiabilité et efficacité au cœur du système.</p>
             </div>
         </div>
         
@@ -344,6 +361,11 @@
                     });
                 </script>
             </div>
+            
+            <footer class="login-footer">
+                &copy; {{ date('Y') }} Mikem Technologie. Tous droits réservés. <br>
+                Développé par <strong>Vianney SASSE & Noel GBAGUIDI</strong>
+            </footer>
         </div>
     </div>
 </body>

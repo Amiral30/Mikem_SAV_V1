@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mikem-sav-v1';
+const CACHE_NAME = 'mikem-sav-v2';
 const ASSETS = [
     '/login',
     '/css/app.css',

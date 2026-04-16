@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MissionController as AdminMissionController;
 use App\Http\Controllers\Admin\MissionValidationController;
 use App\Http\Controllers\Admin\TechnicienController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Technicien\DashboardController as TechDashboardController;
 use App\Http\Controllers\Technicien\MissionController as TechMissionController;
 use App\Http\Controllers\Technicien\RapportController;
@@ -27,6 +28,10 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     // V13 : Validation des rapports
     Route::post('/missions/{mission}/valider', [MissionValidationController::class, 'valider'])->name('missions.valider');
     Route::post('/missions/{mission}/rejeter', [MissionValidationController::class, 'rejeter'])->name('missions.rejeter');
+
+    // Profil Admin (changement de mot de passe)
+    Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::prefix('technicien')->middleware(['auth', 'technicien', 'check.onboarding'])->name('technicien.')->group(function () {

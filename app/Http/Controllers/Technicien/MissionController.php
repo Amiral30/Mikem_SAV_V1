@@ -12,10 +12,15 @@ class MissionController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $query = $user->missions()->with('chefEquipe', 'techniciens');
+        // On ne montre que les missions actives (pas terminées ni validées)
+        $query = $user->missions()
+            ->whereIn('statut', ['en_attente', 'en_cours', 'en_pause', 'acceptee', 'suspendue'])
+            ->with('chefEquipe', 'techniciens');
+            
         if ($request->filled('statut')) {
             $query->where('statut', $request->statut);
         }
+        
         $missions = $query->latest()->paginate(15);
         return view('technicien.missions.index', compact('missions'));
     }
@@ -95,13 +100,19 @@ class MissionController extends Controller
         return back()->with('success', 'Statut mis à jour.');
     }
 
-    public function historique()
+    public function historique(Request $request)
     {
         $user = auth()->user();
-        $missions = $user->missions()
-            ->where('statut', 'terminee')
-            ->with('rapports', 'chefEquipe')
-            ->latest()->paginate(15);
+        $query = $user->missions()
+            ->whereIn('statut', ['terminee', 'validee'])
+            ->with('rapports', 'chefEquipe');
+
+        // Filtrage par date si présente
+        if ($request->filled('date')) {
+            $query->whereDate('date_mission', $request->date);
+        }
+
+        $missions = $query->latest()->paginate(15);
         return view('technicien.historique', compact('missions'));
     }
 }
